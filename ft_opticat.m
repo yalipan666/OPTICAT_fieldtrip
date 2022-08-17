@@ -40,7 +40,8 @@ end
 %% step-1: high-pass filter data above hpfreq
 cfg               = [];
 cfg.hpfilter      = 'yes';
-cfg.hpfreq        = mycfg.HIPASS;
+cfg.hpfreq        = mycfg.HIPASS; %One cutoff frequency required 
+cfg.hpfilttype    = 'firws'; % windowed sinc FIR filter, the same as in EEGLAB pop_eegfiltnew() 
 cfg.channel       = mycfg.MEG_SENSORS;
 data4ICA_training = ft_preprocessing(cfg,data4ICA);
 
@@ -54,7 +55,7 @@ for i = 1:length(saccade_onset)
     trlend        = saccade_onset(i)+saccade_epoch(2)*Fs-1;
     SP.trial{i}   = data4ICA_training.trial{1,1}(:,trlbegin:trlend);
 end
-% clear data4ICA
+clear data4ICA
 if mycfg.REMOVE_EPOCHMEAN
     % remove mean, baseline subtracted across whole epoch
     SP = cellfun(@(x) x-mean(x,2),SP.trial,'Uni',false);
